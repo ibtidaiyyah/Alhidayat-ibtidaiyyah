@@ -231,12 +231,7 @@
     </div>
 
     <script>
-        firebase.auth().onAuthStateChanged((user) => {
-  if (!user) {
-    // Jika tidak ada user, balikkan ke login
-    window.location.href = "index.html";
-  }
-});
+       
         const toggleBtn = document.getElementById('togglePassword');
         const passwordField = document.getElementById('password');
         
