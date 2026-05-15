@@ -6903,6 +6903,8 @@ input[type=number] {
                 </div>
 
                 <div class="btn-group">
+                    <button onclick="tambahMapelBaru()" class="btn-print" style="background: #8b5cf6;">➕ TAMBAH MAPEL</button>
+                    <button onclick="hapusMapelSpesifik()" class="btn-print" style="background: #f43f5e;">🗑️ HAPUS MAPEL</button>
                     <button onclick="saveDataNilaiRaport()" class="btn-save">💾 SIMPAN</button>
                     <button onclick="cetakTabelPenuh()" class="btn-print">🖨️ CETAK FULL</button>
                     <button onclick="cetakRaportMassal()" class="btn-print" style="background: #059669;">📜 CETAK SEMUA</button>
@@ -7022,6 +7024,91 @@ function renderTableRaport() {
     // 7. JALANKAN STATISTIK
     updateStatistikBawah();
 }
+function tambahMapelBaru() {
+    Swal.fire({
+        title: 'Tambah Mata Pelajaran (Fan)',
+        input: 'text',
+        inputLabel: 'Masukkan Nama Mapel (Bisa Arab/Indonesia)',
+        inputPlaceholder: 'Contoh: Fiqih atau الفقه',
+        showCancelButton: true,
+        confirmButtonText: 'Tambah',
+        cancelButtonText: 'Batal',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Nama mapel tidak boleh kosong!'
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const namaBaru = result.value.trim();
+            
+            // 1. Tambah ke array global
+            daftarFanTambahan.push(namaBaru);
+            
+            // 2. Simpan ke localStorage agar tidak hilang saat refresh
+            localStorage.setItem('daftarFanTambahan', JSON.stringify(daftarFanTambahan));
+            
+            // 3. Refresh tabel raport agar kolom baru muncul
+            renderTableRaport();
+            
+            Swal.fire('Berhasil', `Mapel ${namaBaru} ditambahkan`, 'success');
+        }
+    });
+}
+function hapusMapelSpesifik() {
+    if (daftarFanTambahan.length === 0) {
+        return Swal.fire("Kosong", "Belum ada mata pelajaran yang bisa dihapus.", "info");
+    }
+
+    // Buat objek pilihan untuk SweetAlert2
+    const inputOptions = {};
+    daftarFanTambahan.forEach((mapel, index) => {
+        inputOptions[index] = mapel;
+    });
+
+    Swal.fire({
+        title: 'Pilih Mapel yang Akan Dihapus',
+        input: 'select',
+        inputOptions: inputOptions,
+        inputPlaceholder: '--- Pilih Mapel ---',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        confirmButtonText: 'Hapus Sekarang',
+        cancelButtonText: 'Batal',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Anda harus memilih salah satu!';
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const indexHapus = result.value;
+            const namaMapel = daftarFanTambahan[indexHapus];
+
+            Swal.fire({
+                title: 'Konfirmasi Akhir',
+                text: `Hapus mapel "${namaMapel}"? Data nilai yang sudah terisi di kolom ini mungkin akan hilang saat disimpan ulang.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Tetap Hapus'
+            }).then((confirm) => {
+                if (confirm.isConfirmed) {
+                    // Hapus dari array berdasarkan index
+                    daftarFanTambahan.splice(indexHapus, 1);
+                    
+                    // Simpan ke localStorage
+                    localStorage.setItem('daftarFanTambahan', JSON.stringify(daftarFanTambahan));
+                    
+                    // Refresh Tabel
+                    renderTableRaport();
+                    
+                    showToast(`Mapel ${namaMapel} berhasil dihapus`, "success");
+                }
+            });
+        }
+    });
+}
+
 
 function updateStatistikBawah() {
     const table = document.getElementById('table-raport-main');
