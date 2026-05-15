@@ -7108,8 +7108,6 @@ function hapusMapelSpesifik() {
         }
     });
 }
-
-
 function updateStatistikBawah() {
     const table = document.getElementById('table-raport-main');
     const rows = document.querySelectorAll('#bodyRaport tr');
@@ -11539,88 +11537,6 @@ function updateTahunAktif(val) {
         else location.reload(); // Fallback
     });
 }
-// Fallback jika tidak ada variabel global
-
-    function lihatBiodata(id) {
-        const listSantri = db.santri();
-        const s = listSantri.find(x => Number(x.id) === Number(id));
-        if (!s) {
-            alert("Data santri tidak ditemukan!");
-            return;
-        }
-
-        const tc = (str) => (str || "").toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
-
-        // Header & Photo
-        document.getElementById('bio-nama-header').innerText = tc(s.nama);
-        document.getElementById('bio-nisn-header').innerText = `NISN: ${s.nisn || '-'}`;
-        document.getElementById('bio-status-badge').innerText = s.status || 'Aktif';
-        document.getElementById('bio-foto').src = s.foto || ''; 
-        
-        // Data Diri
-        document.getElementById('bio-ttl').innerText = `: ${tc(s.tempat_lahir || 'Kota')}, ${s.tgl_lahir || '-'}`;
-        document.getElementById('bio-alamat').innerText = `: ${tc(s.alamat)}`;
-        document.getElementById('bio-kamar-kelas').innerText = `: ${tc(s.kamar)} / ${tc(s.kelas)}`;
-        document.getElementById('bio-ortu').innerText = `: ${tc(s.ortu)}`;
-        document.getElementById('bio-hp').innerText = `: ${s.hp || '-'}`;
-        document.getElementById('bio-masuk').innerText = `: ${s.tgl_masuk || '-'}`;
-
-        // Load Iuran
-        const dataIuran = JSON.parse(localStorage.getItem('db_iuran')) || [];
-        const myIuran = dataIuran.filter(i => i.idSantri == id);
-        document.getElementById('bio-table-iuran').innerHTML = myIuran.length ? myIuran.map(i => `
-            <tr><td>${i.bulan} ${i.tahun}</td><td>${i.jenis}</td><td style="color:#166534; font-weight:600;">Lunas</td></tr>
-        `).join('') : '<tr><td colspan="3" style="text-align:center">Belum ada riwayat iuran</td></tr>';
-
-        // Load Pelanggaran
-        const dataLapor = JSON.parse(localStorage.getItem('db_pelanggaran')) || [];
-        const myLapor = dataLapor.filter(p => p.idSantri == id);
-        document.getElementById('bio-table-pelanggaran').innerHTML = myLapor.length ? myLapor.map(p => `
-            <tr><td>${p.tgl}</td><td>${tc(p.kasus)}</td><td>${tc(p.sanksi)}</td></tr>
-        `).join('') : '<tr><td colspan="3" style="text-align:center">Bersih dari pelanggaran</td></tr>';
-
-        // Load Hafalan & Keaktifan
-        const dataNilai = JSON.parse(localStorage.getItem('dataNilaiRaport')) || [];
-        const myNilai = dataNilai.find(n => n.idSantri == id && n.thn === currentYear);
-        
-        let hafHtml = "";
-        if(myNilai && myNilai.hafalan) {
-            Object.entries(myNilai.hafalan).forEach(([key, val]) => {
-                hafHtml += `<tr><td>${tc(key)}</td><td>${val}</td></tr>`;
-            });
-        }
-        document.getElementById('bio-table-hafalan').innerHTML = hafHtml || '<tr><td colspan="2" style="text-align:center">Data hafalan belum diinput</td></tr>';
-        document.getElementById('bio-keaktifan-summary').innerText = myNilai ? `${myNilai.persentase_hadir || '0'}% Kehadiran` : 'Belum ada data presensi';
-
-        // Show Modal
-        document.getElementById('modalBiodata').style.display = 'flex';
-    }
-
-    function openTab(evt, tabName) {
-        const contents = document.querySelectorAll(".tab-content");
-        const links = document.querySelectorAll(".tab-link");
-        
-        contents.forEach(c => c.classList.remove("active"));
-        links.forEach(l => l.classList.remove("active"));
-        
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
-    }
-
-    function closeBiodata() {
-        document.getElementById('modalBiodata').style.display = 'none';
-    }
-
-    function printBiodata() {
-        window.print();
-    }
-
-    // Menutup modal jika area luar di-klik
-    window.onclick = function(event) {
-        const modal = document.getElementById('modalBiodata');
-        if (event.target == modal) closeBiodata();
-    }
-
 // ==========================================
 // 3. NAVIGASI & INISIALISASI (AUTO LOAD)
 // ==========================================
@@ -11663,81 +11579,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-<!-- Modal Biodata -->
-<div id="modalBiodata" class="modal-biodata">
-    <div class="biodata-content">
-        <div class="biodata-header">
-            <h2><i class="fa-solid fa-id-card-alt"></i> PROFIL LENGKAP SANTRI</h2>
-            <span class="close-btn" onclick="closeBiodata()">&times;</span>
-        </div>
-        
-        <div class="biodata-body">
-            <div class="profile-aside">
-                <div class="photo-box">
-                    <img id="bio-foto"  alt="Foto">
-                </div>
-                <h3 id="bio-nama-header">-</h3>
-                <p id="bio-nisn-header">NISN: -</p>
-                <div id="bio-status-badge" class="status-badge">-</div>
-            </div>
-
-            <div class="profile-main">
-                <div class="tabs-nav">
-                    <button class="tab-link active" onclick="openTab(event, 'tab-diri')">Data Diri</button>
-                    <button class="tab-link" onclick="openTab(event, 'tab-iuran')">Iuran</button>
-                    <button class="tab-link" onclick="openTab(event, 'tab-akademik')">Akademik</button>
-                    <button class="tab-link" onclick="openTab(event, 'tab-pelanggaran')">Pelanggaran</button>
-                </div>
-
-                <div id="tab-diri" class="tab-content active">
-                    <table class="info-table">
-                        <tr><td>Tempat, Tgl Lahir</td><td id="bio-ttl">: -</td></tr>
-                        <tr><td>Alamat</td><td id="bio-alamat">: -</td></tr>
-                        <tr><td>Kamar / Kelas</td><td id="bio-kamar-kelas">: -</td></tr>
-                        <tr><td>Wali Santri</td><td id="bio-ortu">: -</td></tr>
-                        <tr><td>No. HP WhatsApp</td><td id="bio-hp">: -</td></tr>
-                        <tr><td>Tanggal Masuk</td><td id="bio-masuk">: -</td></tr>
-                    </table>
-                </div>
-
-                <div id="tab-iuran" class="tab-content">
-                    <div class="scroll-table">
-                        <table>
-                            <thead><tr><th>Bulan/Tahun</th><th>Jenis</th><th>Status</th></tr></thead>
-                            <tbody id="bio-table-iuran"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="tab-akademik" class="tab-content">
-                    <div style="background: #eff6ff; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                        <strong><i class="fa-solid fa-chart-line"></i> Keaktifan (Presensi)</strong>
-                        <div id="bio-keaktifan-summary" style="margin-top:5px; font-size: 1.1rem;">-</div>
-                    </div>
-                    <strong><i class="fa-solid fa-book-open-reader"></i> Progress Hafalan</strong>
-                    <div class="scroll-table">
-                        <table>
-                            <thead><tr><th>Materi / Surah</th><th>Predikat / Nilai</th></tr></thead>
-                            <tbody id="bio-table-hafalan"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="tab-pelanggaran" class="tab-content">
-                    <div class="scroll-table">
-                        <table>
-                            <thead><tr><th>Tanggal</th><th>Kasus</th><th>Sanksi</th></tr></thead>
-                            <tbody id="bio-table-pelanggaran"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="biodata-footer">
-            <button class="btn-print" onclick="printBiodata()"><i class="fa-solid fa-print"></i> Cetak Profil</button>
-        </div>
-    </div>
-</div>
 </body> 
 
 </html>     
