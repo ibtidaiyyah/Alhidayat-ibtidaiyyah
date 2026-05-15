@@ -908,7 +908,12 @@ const KATEGORI_TAHUNAN = [
     "daftar_baru", "daftar_lama", "u_gedung", "raport", 
     "batik", "putih", "kas_kelas", "operasional", "kta"
 ];
-
+firebase.auth().onAuthStateChanged((user) => {
+  if (!user) {
+    // Jika tidak ada user, balikkan ke login
+    window.location.href = "index.html";
+  }
+});
 const BULAN_HIJRIYAH_ARAB = {
     "Syawal": "شوال",
     "Zulqadah": "ذو القعدة",
