@@ -801,7 +801,12 @@
     <script>
         // --- SISTEM KEAMANAN NAVIGASI ---
 // Letakkan di paling atas file dashboard.html (dalam tag <script>)
-
+firebase.auth().onAuthStateChanged((user) => {
+  if (!user) {
+    // Jika tidak ada user, balikkan ke login
+    window.location.href = "index.html";
+  }
+});
 function logout() {
     // 1. Konfirmasi ke user
     if (confirm("Apakah Anda yakin ingin keluar?")) {
@@ -4474,9 +4479,6 @@ function filterDataKolektif() {
             <td style="padding: 12px 15px; text-align:center; white-space:nowrap;">
                 <button onclick="editSantri(${s.id})" style="border:none; background:#eff6ff; color:#2563eb; padding:6px; border-radius:4px; cursor:pointer;" title="Edit">✏️</button>
                 <button onclick="deleteSantri(${s.id})" style="border:none; background:#fef2f2; color:#dc2626; padding:6px; border-radius:4px; cursor:pointer;" title="Hapus">🗑️</button>
-                <button onclick="lihatBiodata(${s.id})" style="background:#3b82f6; color:white; border-radius:4px; padding:5px 10px; border:none; cursor:pointer;">
-    <i class="fa-solid fa-user"></i> Profil
-</button>
             </td>
         </tr>`;
     }).join('');
@@ -11581,81 +11583,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-<!-- Modal Biodata -->
-<div id="modalBiodata" class="modal-biodata">
-    <div class="biodata-content">
-        <div class="biodata-header">
-            <h2><i class="fa-solid fa-id-card-alt"></i> PROFIL LENGKAP SANTRI</h2>
-            <span class="close-btn" onclick="closeBiodata()">&times;</span>
-        </div>
-        
-        <div class="biodata-body">
-            <div class="profile-aside">
-                <div class="photo-box">
-                    <img id="bio-foto"  alt="Foto">
-                </div>
-                <h3 id="bio-nama-header">-</h3>
-                <p id="bio-nisn-header">NISN: -</p>
-                <div id="bio-status-badge" class="status-badge">-</div>
-            </div>
 
-            <div class="profile-main">
-                <div class="tabs-nav">
-                    <button class="tab-link active" onclick="openTab(event, 'tab-diri')">Data Diri</button>
-                    <button class="tab-link" onclick="openTab(event, 'tab-iuran')">Iuran</button>
-                    <button class="tab-link" onclick="openTab(event, 'tab-akademik')">Akademik</button>
-                    <button class="tab-link" onclick="openTab(event, 'tab-pelanggaran')">Pelanggaran</button>
-                </div>
-
-                <div id="tab-diri" class="tab-content active">
-                    <table class="info-table">
-                        <tr><td>Tempat, Tgl Lahir</td><td id="bio-ttl">: -</td></tr>
-                        <tr><td>Alamat</td><td id="bio-alamat">: -</td></tr>
-                        <tr><td>Kamar / Kelas</td><td id="bio-kamar-kelas">: -</td></tr>
-                        <tr><td>Wali Santri</td><td id="bio-ortu">: -</td></tr>
-                        <tr><td>No. HP WhatsApp</td><td id="bio-hp">: -</td></tr>
-                        <tr><td>Tanggal Masuk</td><td id="bio-masuk">: -</td></tr>
-                    </table>
-                </div>
-
-                <div id="tab-iuran" class="tab-content">
-                    <div class="scroll-table">
-                        <table>
-                            <thead><tr><th>Bulan/Tahun</th><th>Jenis</th><th>Status</th></tr></thead>
-                            <tbody id="bio-table-iuran"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="tab-akademik" class="tab-content">
-                    <div style="background: #eff6ff; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                        <strong><i class="fa-solid fa-chart-line"></i> Keaktifan (Presensi)</strong>
-                        <div id="bio-keaktifan-summary" style="margin-top:5px; font-size: 1.1rem;">-</div>
-                    </div>
-                    <strong><i class="fa-solid fa-book-open-reader"></i> Progress Hafalan</strong>
-                    <div class="scroll-table">
-                        <table>
-                            <thead><tr><th>Materi / Surah</th><th>Predikat / Nilai</th></tr></thead>
-                            <tbody id="bio-table-hafalan"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="tab-pelanggaran" class="tab-content">
-                    <div class="scroll-table">
-                        <table>
-                            <thead><tr><th>Tanggal</th><th>Kasus</th><th>Sanksi</th></tr></thead>
-                            <tbody id="bio-table-pelanggaran"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="biodata-footer">
-            <button class="btn-print" onclick="printBiodata()"><i class="fa-solid fa-print"></i> Cetak Profil</button>
-        </div>
-    </div>
-</div>
 </body> 
 
 </html>     
