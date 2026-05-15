@@ -801,12 +801,6 @@
     <script>
         // --- SISTEM KEAMANAN NAVIGASI ---
 // Letakkan di paling atas file dashboard.html (dalam tag <script>)
-firebase.auth().onAuthStateChanged((user) => {
-  if (!user) {
-    // Jika tidak ada user, balikkan ke login
-    window.location.href = "index.html";
-  }
-});
 function logout() {
     // 1. Konfirmasi ke user
     if (confirm("Apakah Anda yakin ingin keluar?")) {
@@ -820,7 +814,7 @@ function logout() {
 
         // 4. Arahkan kembali ke halaman login
         // Pastikan nama file sesuai (misal: index.html atau login.html)
-        window.location.replace('perfect-login.html'); 
+        window.location.replace('index.html'); 
     }
 }
 
