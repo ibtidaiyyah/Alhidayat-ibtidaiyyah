@@ -859,42 +859,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Map untuk menormalisasi variasi input/string dari Intl.DateTimeFormat
 const mapBulan = {
-    "Muharram": "Muharram",
-    "Al-Muharram": "Muharram",
+    // Kunci (Sistem) : Nilai (Standar Anda)
+    "Muharram": "Muharam",
+    "Al-Muharram": "Muharam",
     "Safar": "Safar",
-    "Rabi'ul Awal": "Rabiul Awal",
-    "Rabi’ul Awal": "Rabiul Awal",
-    "Rabiul Awal": "Rabiul Awal",
-    "Rabiul-Awwal": "Rabiul Awal",
-    "Rabi'ul Akhir": "Rabiul Akhir",
-    "Rabi’ul Akhir": "Rabiul Akhir",
-    "Rabiul Akhir": "Rabiul Akhir",
-    "Rabi'uts Tsani": "Rabiul Akhir",
-    "Rabi’uts Tsani": "Rabiul Akhir",
-    "Jumadil Ula": "Jumadil Ula",
-    "Jumada al-ula": "Jumadil Ula",
-    "Jumadil Awal": "Jumadil Ula",
-    "Jumada al-awwal": "Jumadil Ula",
-    "Jumadil Akhir": "Jumadil Akhira",
-    "Jumadil Akhira": "Jumadil Akhira",
-    "Jumada al-akhira": "Jumadil Akhira",
+    "Rabi'ul Awal": "Rabiulawal",
+    "Rabi’ul Awal": "Rabiulawal",
+    "Rabiul Awal": "Rabiulawal",
+    "Rabiul-Awwal": "Rabiulawal",
+    "Rabi'ul Akhir": "Rabiulakhir",
+    "Rabi’ul Akhir": "Rabiulakhir",
+    "Rabiul Akhir": "Rabiulakhir",
+    "Rabi'uts Tsani": "Rabiulakhir",
+    "Rabi’uts Tsani": "Rabiulakhir",
+    "Jumadil Ula": "Jumadilawal",
+    "Jumada al-ula": "Jumadilawal",
+    "Jumadil Awal": "Jumadilawal",
+    "Jumada al-awwal": "Jumadilawal",
+    "Jumadil Akhir": "Jumadilakhir",
+    "Jumadil Akhira": "Jumadilakhir",
+    "Jumada al-akhira": "Jumadilakhir",
     "Rajab": "Rajab",
-    "Sya'ban": "Syaban",
-    "Sya’ban": "Syaban",
-    "Syaban": "Syaban",
-    "Syakban": "Syaban",
-    "Ramadan": "Ramadhan",
-    "Ramadhan": "Ramadhan",
+    "Sya'ban": "Syakban",
+    "Sya’ban": "Syakban",
+    "Syaban": "Syakban",
+    "Syakban": "Syakban",
+    "Ramadan": "Ramadan",
+    "Ramadhan": "Ramadan",
     "Syawal": "Syawal",
-    "Zulkaidah": "Zulqadah",
-    "Dzulqa'dah": "Zulqadah",
-    "Zulqadah": "Zulqadah",
-    "Dzulhijjah": "Zulhijjah",
-    "Zulhijjah": "Zulhijjah",
-    "Dzulhijah": "Zulhijjah",
-    "Zulhijah": "Zulhijjah"
+    "Zulkaidah": "Zulkaidah",
+    "Dzulqa'dah": "Zulkaidah",
+    "Zulqadah": "Zulkaidah",
+    "Dzulhijjah": "Zulhijah",
+    "Zulhijjah": "Zulhijah",
+    "Dzulhijah": "Zulhijah",
+    "Zulhijah": "Zulhijah"
 };
-
 // Standar penulisan seragam untuk digunakan di sistem
 const BULAN_HIJRIYAH = [
     "Syawal", "Zulkaidah", "Zulhijah", "Muharam", "Safar", "Rabiulawal", "Rabiulakhir", 
@@ -911,19 +911,18 @@ const KATEGORI_TAHUNAN = [
 
 const BULAN_HIJRIYAH_ARAB = {
     "Syawal": "شوال",
-    "Zulqadah": "ذو القعدة",
-    "Zulhijjah": "ذو الحجة",
-    "Muharram": "محرم",
+    "Zulkaidah": "ذو القعدة",
+    "Zulhijah": "ذو الحجة",
+    "Muharam": "محرم",
     "Safar": "صفر",
-    "Rabiul Awal": "ربيع الأول",
-    "Rabiul Akhir": "ربيع الآخر",
-    "Jumadil Ula": "جمادى الأولى",
-    "Jumadil Akhira": "جمادى الآخرة",
+    "Rabiulawal": "ربيع الأول",
+    "Rabiulakhir": "ربيع الآخر",
+    "Jumadilawal": "جمادى الأولى",
+    "Jumadilakhir": "جمادى الآخرة",
     "Rajab": "رجب",
-    "Syaban": "شعبان",
-    "Ramadhan": "رمضان"
+    "Syakban": "شعبان",
+    "Ramadan": "رمضان"
 };
-
 const HARI_ARAB = {
     "Sunday": "الأحد",
     "Monday": "الإثنين",
@@ -1018,19 +1017,22 @@ function getStatusBg(status) {
 
 function isSantriWajibBayar(santri, indexBulanTarget) {
     // Ambil tahun awal & akhir hijriyah dari currentYear (Contoh string: "1447-1448 H/2026-2027 M")
-    let thnHijriAktif = currentYear.split(" ")[0]; 
-    let [tahunAwalH, tahunAkhirH] = thnHijriAktif.split("-").map(t => parseInt(t));
+    if (!santri || !currentYear) return true; // Default bayar jika data error
 
-    // Bulan ke-0 sampai ke-2 (Syawal, Zulqadah, Zulhijjah) masuk tahunAwalH
-    // Bulan ke-3 sampai ke-11 (Muharram - Ramadhan) masuk tahunAkhirH
+    let thnHijriAktif = currentYear.split(" ")[0]; 
+    if (!thnHijriAktif.includes("-")) return true;
+
+    let [tahunAwalH, tahunAkhirH] = thnHijriAktif.split("-").map(t => parseInt(t));
     let tahunTarget = (indexBulanTarget <= 2) ? tahunAwalH : tahunAkhirH;
 
-    // Logika 1: Jika santri keluar
+    // Tambahkan pengecekan null untuk tanggal
     if (santri.status === "KELUAR" && santri.tgl_keluar) {
         const infoH = getHijriyahData(santri.tgl_keluar);
-        const thnKeluar = parseInt(infoH.thnH);
-        if (thnKeluar < tahunTarget) return false;
-        if (thnKeluar === tahunTarget && indexBulanTarget > infoH.blnHI) return false;
+        if (infoH.blnHI !== -1) {
+            const thnKeluar = parseInt(infoH.thnH);
+            if (thnKeluar < tahunTarget) return false;
+            if (thnKeluar === tahunTarget && indexBulanTarget > infoH.blnHI) return false;
+        }
     }
 
     // Logika 2: Jika santri baru masuk
@@ -1163,37 +1165,66 @@ const Exporter = {
 // ==========================================
 
 const db = {
-    santri: () => JSON.parse(localStorage.getItem('dataSantri')) || [],
-    keaktifan: () => JSON.parse(localStorage.getItem('dataKeaktifan')) || [],
-    ustadz: () => JSON.parse(localStorage.getItem('dataUstadz')) || [],
-    siswa: () => JSON.parse(localStorage.getItem('dataSiswa')) || [],
-    absensiSiswa: () => JSON.parse(localStorage.getItem('dataAbsensiSiswa')) || [],
-    absensiGuru: () => JSON.parse(localStorage.getItem('dataAbsensiGuru')) || [],
-    hafalan: () => JSON.parse(localStorage.getItem('dataHafalan')) || [],
-    transaksiPondok: () => JSON.parse(localStorage.getItem('transaksiPondok')) || [],
-    transaksiMadrasah: () => JSON.parse(localStorage.getItem('transaksiMadrasah')) || [],
-    transaksiBendaharaPondok: () => JSON.parse(localStorage.getItem('transaksiBendaharaPondok')) || [],
-    transaksiBendaharaMi: () => JSON.parse(localStorage.getItem('transaksiBendaharaMi')) || [],
-    pemasukanTahunan: () => JSON.parse(localStorage.getItem('pemasukanBendaharaTahunan')) || 0,
-    transaksiKosLoundry: () => JSON.parse(localStorage.getItem('transaksiKosLoundry')) || [],
-    dataPelanggaran: () => JSON.parse(localStorage.getItem('dataPelanggaran')) || [],
-    masterHargaKL: () => JSON.parse(localStorage.getItem('masterHargaKL')) || { kos: 0, ldry: 0 },
-    masterPondok: () => JSON.parse(localStorage.getItem('masterPondok')) || {
+    // Fungsi pembantu agar kode lebih bersih (Anti-Crash)
+    get: (key, defaultValue) => {
+        try {
+            const item = localStorage.getItem(key);
+            // Jika data tidak ada, langsung kembalikan default
+            if (!item) return defaultValue;
+            return JSON.parse(item);
+        } catch (e) {
+            console.error(`Gagal mengambil data ${key}:`, e);
+            return defaultValue;
+        }
+    },
+
+    santri: () => db.get('dataSantri', []),
+    keaktifan: () => db.get('dataKeaktifan', []),
+    ustadz: () => db.get('dataUstadz', []),
+    siswa: () => db.get('dataSiswa', []),
+    absensiSiswa: () => db.get('dataAbsensiSiswa', []),
+    absensiGuru: () => db.get('dataAbsensiGuru', []),
+    hafalan: () => db.get('dataHafalan', []),
+    transaksiPondok: () => db.get('transaksiPondok', []),
+    transaksiMadrasah: () => db.get('transaksiMadrasah', []),
+    transaksiBendaharaPondok: () => db.get('transaksiBendaharaPondok', []),
+    transaksiBendaharaMi: () => db.get('transaksiBendaharaMi', []),
+    pemasukanTahunan: () => db.get('pemasukanBendaharaTahunan', 0),
+    transaksiKosLoundry: () => db.get('transaksiKosLoundry', []),
+    dataPelanggaran: () => db.get('dataPelanggaran', []),
+    
+    masterHargaKL: () => db.get('masterHargaKL', { kos: 0, ldry: 0 }),
+    
+    masterPondok: () => db.get('masterPondok', {
         daftar_baru: 0, daftar_lama: 0, syahriyah: 0, u_gedung: 0, bangunan: 0, 
         seragam: 0, genset: 0, lemari: 0, kebersihan: 0, operasional: 0, kas_kamar: 0, kta: 0
-    },
-    masterMadrasah: () => JSON.parse(localStorage.getItem('masterMadrasah')) || {
+    }),
+    
+    masterMadrasah: () => db.get('masterMadrasah', {
         daftar_baru: 100000, daftar_lama: 50000, syahriyah: 35000, u_gedung: 200000, 
         raport: 25000, batik: 85000, putih: 75000, kas_kelas: 10000, operasional: 15000, 
         kta: 10000, imtihan1: 50000, imtihan2: 50000, imtihan3: 50000 
-    },
-    dataStruktur: () => JSON.parse(localStorage.getItem('dataStruktur')) || [],
-    dataLaporan: () => JSON.parse(localStorage.getItem('dataLaporan')) || [],
-    save: (key, data) => {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
-};
+    }),
+    
+    dataStruktur: () => db.get('dataStruktur', []),
+    dataLaporan: () => db.get('dataLaporan', []),
 
+    // Fungsi simpan tetap sama namun lebih rapi
+    save: (key, data) => {
+        try {
+            localStorage.setItem(key, JSON.stringify(data));
+        } catch (e) {
+            console.error(`Gagal menyimpan data ${key}:`, e);
+            // Tips: LocalStorage punya batas (biasanya 5MB). Jika penuh, tampilkan peringatan
+            if (e.name === 'QuotaExceededError') {
+                alert("Penyimpanan penuh! Mohon hapus data yang tidak penting.");
+            }
+        }
+    },
+
+    // Tambahan: Fungsi untuk hapus/reset satu data
+    remove: (key) => localStorage.removeItem(key)
+};
 let dataSantri, dataUstadz, dataSiswa, dataAbsensiSiswa, dataAbsensiGuru, dataHafalan,
     transaksiPondok, transaksiMadrasah, transaksiBendaharaPondok, 
     transaksiBendaharaMi, pemasukanBendaharaTahunan,
@@ -1220,7 +1251,6 @@ function refreshGlobalData() {
     dataSiswa = db.siswa();
     dataAbsensiSiswa = db.absensiSiswa();
     dataAbsensiGuru = db.absensiGuru();
-    dataHafalan = db.hafalan();
     transaksiPondok = db.transaksiPondok();
     transaksiMadrasah = db.transaksiMadrasah();
     transaksiBendaharaPondok = db.transaksiBendaharaPondok();
@@ -1232,7 +1262,9 @@ function refreshGlobalData() {
     dataLaporan = db.dataLaporan();
     
     dataNilaiRaport = JSON.parse(localStorage.getItem('dataNilaiRaport')) || [];
-    daftarFanTambahan = JSON.parse(localStorage.getItem('daftarFanTambahan')) || ["Fiqih", "Tauhid", "Nahwu", "Shorof"];
+    daftarFanTambahan = JSON.parse(localStorage.getItem('daftarFanTambahan')) || ["القرآن الكريم", "الحديث الشريف", "التوحيد", "التجويد", "الفقه", 
+    "النحو", "الصرف", "العربية", "لغة العربية", "علم الأدب", 
+    "تاريخ", "خط", "إملاء", "حساب", "عادل"];
     
     masterPondok = db.masterPondok();
     masterMadrasah = db.masterMadrasah();
@@ -1289,12 +1321,9 @@ function jalankanHalaman(jenis, event) {
         'siswa': typeof showSiswaData === 'function' ? showSiswaData : null,
         'rekap_kelas': typeof showRekapData === 'function' ? showRekapData : null,
         'absensi_siswa': typeof showAbsensiSiswa === 'function' ? showAbsensiSiswa : null,
-        'hafalan' : typeof showHafalan === 'function' ? showHafalan : null,
         'rekap_siswa': typeof showRekapAbsensiSiswa === 'function' ? showRekapAbsensiSiswa : null,
         'raport': typeof showRaport === 'function' ? showRaport : null,
         'kamar': typeof showRekapKamar === 'function' ? showRekapKamar : null,
-        'pelanggaran': typeof showPelanggaran === 'function' ? showPelanggaran : null,
-        'rekap_pelanggaran': typeof showRekapPelanggaran === 'function' ? showRekapPelanggaran : null,
         'keuangan_pondok': typeof showPembayaranPondok === 'function' ? showPembayaranPondok : null,
         'pembayaran_santri': typeof showPembayaranPondok === 'function' ? showPembayaranPondok : null,
         'rekap_pondok': typeof showRekapPondok === 'function' ? showRekapPondok : null,
@@ -1499,10 +1528,18 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 window.onload = () => {
+    db.initMaster(); // Pastikan master data ada
     refreshGlobalData();
     renderTahunSelect();
-    jalankanHalaman(activeMenu); 
+    
+    // Pastikan halaman yang dipanggil valid
+    if (activeMenu) {
+        jalankanHalaman(activeMenu);
+    } else {
+        jalankanHalaman('dashboard');
+    }
 };
+
 function showDashboard() {
     activeMenu = "dashboard";
     localStorage.setItem('activeMenu', 'dashboard');
