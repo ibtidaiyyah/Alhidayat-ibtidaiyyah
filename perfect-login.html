@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PONPES ALHIDAYAT - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-1: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-2: 0 16px 48px rgba(0, 0, 0, 0.15);
+            --radius: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.35) 0%, transparent 50%),
+                        radial-gradient(circle at 90% 20%, rgba(255, 255, 255, 0.25) 0%, transparent 50%),
+                        radial-gradient(circle at 30% 50%, rgba(5, 150, 105, 0.15) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            33% { transform: scale(1.05) rotate(120deg); }
+            66% { transform: scale(0.98) rotate(240deg); }
+        }
+
+        .main-container {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            width: 100%;
+            max-width: 1400px;
+            justify-content: space-between;
+        }
+
+        .left-branding {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            animation: slideInLeft 0.8s ease-out;
+            color: white;
+            padding-right: 100px;
+            width: 100%;
+        }
+
+        .branding-logo {
+            width: 100%;
+            max-width: 320px;
+            max-height: 240px;
+            margin-bottom: 36px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-2);
+            object-fit: contain;
+            animation: logoPulse 2.5s ease-in-out infinite;
+        }
+
+        .branding-title {
+            font-size: clamp(3.2rem, 5vw, 5.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            line-height: 1.0;
+            white-space: nowrap;
+        }
+
+        .branding-subtitle {
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.97);
+            letter-spacing: 0.02em;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .login-container {
+            flex: 0 0 440px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-2);
+            overflow: hidden;
+            animation: slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+            margin-left: auto;
+        }
+
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes logoPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+
+        .login-header {
+            padding: 48px 36px 32px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .form-logo {
+            width: 80px; height: 80px;
+            margin: 0 auto 20px;
+            object-fit: contain;
+        }
+
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle { color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; }
+
+        .login-form { padding: 36px; }
+
+        .input-group { position: relative; margin-bottom: 24px; }
+        .input-group i {
+            position: absolute; left: 20px; top: 50%;
+            transform: translateY(-50%); color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-group input {
+            width: 100%; padding: 15px 20px 15px 55px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px; color: white; outline: none;
+        }
+
+        .password-toggle { position: absolute; right: 20px; cursor: pointer; }
+
+        .login-button {
+            width: 100%; padding: 16px;
+            background: #fff; border: none;
+            border-radius: 12px; font-weight: 700;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        .login-button:hover { background: #e2e8f0; transform: translateY(-2px); }
+
+        .error-msg {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5; padding: 12px;
+            border-radius: 8px; margin: 0 36px 20px;
+            text-align: center; display: none;
+        }
+
+        .loading { display: none; gap: 10px; justify-content: center; }
+
+        @media (max-width: 1100px) {
+            .main-container { flex-direction: column; text-align: center; gap: 40px; }
+            .left-branding { padding-right: 0; align-items: center; }
+            .login-container { margin: 0 auto; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="left-branding">
+            <img src="pondok warna.png" alt="PONPES ALHIDAYAT" class="branding-logo">
+            <h1 class="branding-title">PONPES ALHIDAYAT</h1>
+            <p class="branding-subtitle">Krasak Temuroso Guntur Demak</p>
+        </div>
+
+        <div class="login-container">
+            <div class="login-header">
+                <img src="pondok warna.png" alt="Logo" class="form-logo">
+                <h1 class="login-title">Selamat Datang</h1>
+                <p class="login-subtitle">Masuk ke dashboard Anda</p>
+            </div>
+
+            <div class="error-msg" id="errorMsg">Username atau Password salah!</div>
+
+            <form class="login-form" id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <i class="fas fa-eye-slash password-toggle" id="togglePassword"></i>
+                </div>
+
+                <button type="submit" class="login-button" id="loginBtn">
+                    <span class="btn-text">MASUK</span>
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Memproses...
+                    </div>
+                </button>
+            </form>
+
+            <div class="demo-hint" style="text-align: center; color: white; padding-bottom: 20px; font-size: 0.8rem; opacity: 0.6;">
+                Demo: admin / admin123
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordField = document.getElementById('password');
+        
+        toggleBtn.addEventListener('click', () => {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            toggleBtn.classList.toggle('fa-eye-slash');
+            toggleBtn.classList.toggle('fa-eye');
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const user = document.getElementById('username').value;
+    const pass = document.getElementById('password').value;
+    const btn = document.getElementById('loginBtn');
+    const btnText = btn.querySelector('.btn-text');
+    const loading = btn.querySelector('.loading');
+    const errorEl = document.getElementById('errorMsg');
+
+    // Animasi Loading
+    btnText.style.display = 'none';
+    loading.style.display = 'flex';
+    errorEl.style.display = 'none';
+
+    // Simulasi delay proses
+    await new Promise(r => setTimeout(r, 800));
+
+    // LOGIKA LOGIN
+    // Pastikan 'isLoggedIn' diset 'true' sebagai STRING
+    // Di file login.html
+if (user === "admin" && pass === "admin123") {
+    // Gunakan localStorage sebagai cadangan jika sessionStorage bermasalah
+    sessionStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('isLoggedIn', 'true'); 
+    
+    console.log("Login sukses, mengarahkan...");
+    
+    // Gunakan replace ke file dashboard
+    window.location.replace('dashboard.html');
+} else {
+        errorEl.style.display = 'block';
+        btnText.style.display = 'block';
+        loading.style.display = 'none';
+    }
+});
+
+    </script>
+</body>
+</html>
