@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Pendaftaran Santri Baru - Al Hidayat</title>
+    <!-- Memuat SweetAlert2 untuk Notifikasi Pop-up -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container-formulir {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+        .header-form {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 15px;
+        }
+        .header-form h2 {
+            margin: 0;
+            color: #10b981;
+            font-weight: 800;
+        }
+        .header-form p {
+            margin: 5px 0 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+        @media (min-width: 480px) {
+            .form-grid { grid-template-columns: 1fr 1fr; }
+            .span-2 { grid-column: span 2; }
+        }
+        .form-group label {
+            font-size: 11px;
+            font-weight: bold;
+            color: #475569;
+            display: block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #10b981;
+        }
+        .btn-submit {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            transition: background 0.2s;
+        }
+        .btn-submit:hover { background: #059669; }
+    </style>
+</head>
+<body>
+
+<div class="container-formulir">
+    <div class="header-form">
+        <h2>FORMULIR PENDAFTARAN SANTRI BARU</h2>
+        <p>Pondok Pesantren Al Hidayat Komplek F & G</p>
+    </div>
+
+    <form id="formPendaftaranWali" onsubmit="simpanPendaftaranWali(event)">
+        <div class="form-grid">
+            
+            <!-- Nama Lengkap -->
+            <div class="form-group span-2">
+                <label>Nama Lengkap Santri</label>
+                <input type="text" name="nama" placeholder="Sesuai Ijazah / KK" required>
+            </div>
+
+            <!-- Nama Arab -->
+            <div class="form-group">
+                <label>Nama Arab (Opsional)</label>
+                <input type="text" name="arab" placeholder="اسم الطالب">
+            </div>
+
+            <!-- NISN / NIK -->
+            <div class="form-group">
+                <label>NISN / NIK</label>
+                <input type="text" name="nisn" placeholder="Nomor NISN atau NIK">
+            </div>
+
+            <!-- Tanggal Daftar Masehi -->
+            <div class="form-group">
+                <label>Tgl Daftar (Masehi)</label>
+                <input type="date" id="tgl_masuk" name="tgl_masuk" required onchange="syncTglDaftarWali(this.value)">
+            </div>
+            
+            <!-- Tanggal Daftar Hijriyah -->
+            <div class="form-group">
+                <label>Tgl Daftar (Hijriyah)</label>
+                <div id="display_tgl_h" style="padding:11px; background:#f0f7ff; color:#2563eb; font-weight:bold; border-radius:8px; border:1px solid #cce3ff; min-height:41px; display:flex; align-items:center; box-sizing:border-box; font-size:14px;">-</div>
+            </div>
+
+            <!-- Tempat Lahir -->
+            <div class="form-group">
+                <label>Tempat Lahir</label>
+                <input type="text" name="tempat_lahir" placeholder="Contoh: Semarang" required>
+            </div>
+
+            <!-- Tanggal Lahir -->
+            <div class="form-group">
+                <label>Tanggal Lahir</label>
+                <input type="date" name="tgl_lahir" required>
+            </div>
+
+            <!-- No HP Wali -->
+            <div class="form-group">
+                <label>No. HP / WhatsApp Wali</label>
+                <input type="text" name="hp" placeholder="08xxxxxxxxxx" required>
+            </div>
+
+            <!-- Kamar -->
+            <div class="form-group">
+                <label>Pilihan Kamar (Komplek F / G)</label>
+                <input type="text" name="kamar" placeholder="Contoh: Kamar F1 atau G3" required>
+            </div>
+
+            <!-- Kelas -->
+            <div class="form-group span-2">
+                <label>Kelas Madrasah</label>
+                <input type="text" name="kelas" placeholder="Contoh: 1 Wustho / 2 Ulya" required>
+            </div>
+
+            <!-- Nama Orang Tua / Wali -->
+            <div class="form-group span-2">
+                <label>Nama Orang Tua / Wali</label>
+                <input type="text" name="ortu" placeholder="Nama Lengkap Ayah / Ibu / Wali" required>
+            </div>
+
+            <!-- Alamat Lengkap -->
+            <div class="form-group span-2">
+                <label>Alamat Lengkap</label>
+                <textarea name="alamat" rows="3" placeholder="Dusun, RT/RW, Desa, Kecamatan, Kabupaten/Kota" required style="resize: none;"></textarea>
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn-submit">KIRIM FORMULIR PENDAFTARAN</button>
+    </form>
+</div>
+
+<script>
+    // Map untuk menormalisasi variasi input bulan agar sama persis dengan index.html
+    const mapBulan = {
+        "Muharram": "Muharam", "Al-Muharram": "Muharam", "Safar": "Safar",
+        "Rabi'ul Awal": "Rabiulawal", "Rabi’ul Awal": "Rabiulawal", "Rabiul Awal": "Rabiulawal", "Rabiul-Awwal": "Rabiulawal",
+        "Rabi'ul Akhir": "Rabiulakhir", "Rabi’ul Akhir": "Rabiulakhir", "Rabiul Akhir": "Rabiulakhir", "Rabi'uts Tsani": "Rabiulakhir", "Rabi’uts Tsani": "Rabiulakhir",
+        "Jumadil Ula": "Jumadilawal", "Jumada al-ula": "Jumadilawal", "Jumadil Awal": "Jumadilawal", "Jumada al-awwal": "Jumadilawal",
+        "Jumadil Akhir": "Jumadilakhir", "Jumadil Akhira": "Jumadilakhir", "Jumada al-akhira": "Jumadilakhir",
+        "Rajab": "Rajab", "Sya'ban": "Syakban", "Sya’ban": "Syakban", "Syaban": "Syakban", "Syakban": "Syakban",
+        "Ramadan": "Ramadan", "Ramadhan": "Ramadan", "Syawal": "Syawal",
+        "Zulkaidah": "Zulkaidah", "Dzulqa'dah": "Zulkaidah", "Zulqadah": "Zulkaidah",
+        "Dzulhijjah": "Zulhijah", "Zulhijjah": "Zulhijah", "Dzulhijah": "Zulhijah"
+    };
+
+    // Set default tanggal daftar hari ini saat halaman dimuat
+    document.addEventListener("DOMContentLoaded", () => {
+        const hariIni = new Date().toISOString().split('T')[0];
+        const inputTglMasuk = document.getElementById('tgl_masuk');
+        if (inputTglMasuk) {
+            inputTglMasuk.value = hariIni;
+            syncTglDaftarWali(hariIni);
+        }
+    });
+
+    // PENGEMBANGAN: Menggunakan fungsi konversi algoritma yang disinkronkan dengan dashboard admin
+    function getHijriyahData(dateString) {
+        if (!dateString) return { tglH: '', blnH: '-' };
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return { tglH: '??', blnH: '-' };
+
+            const formatter = new Intl.DateTimeFormat(
+                'id-TN-u-ca-islamic-umalqura',
+                { day: 'numeric', month: 'long', year: 'numeric' }
+            );
+
+            const parts = formatter.format(date).split(' ');
+            let tglH = parts[0];
+            let namaBulanIntl = parts.slice(1, parts.length - 1).join(' ').trim();
+
+            let blnFinal = mapBulan[namaBulanIntl] || namaBulanIntl;
+
+            return {
+                tglH: tglH,
+                blnH: blnFinal
+            };
+        } catch(e) {
+            console.error(e);
+            return { tglH: '', blnH: '-' };
+        }
+    }
+
+    function syncTglDaftarWali(val) {
+        const display = document.getElementById('display_tgl_h');
+        if (!display) return;
+        if (!val) {
+            display.innerText = "-";
+            return;
+        }
+        const infoH = getHijriyahData(val);
+        display.innerText = infoH.blnH !== '-' ? `${infoH.tglH} ${infoH.blnH}` : "-";
+    }
+
+    function simpanPendaftaranWali(e) {
+        e.preventDefault();
+        
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const toTitleCase = (str) => {
+            return (str || "").trim().toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+        };
+
+        const namaFormatted = toTitleCase(formData.get('nama'));
+        const tempatLahirFormatted = toTitleCase(formData.get('tempat_lahir'));
+        const kamarFormatted = toTitleCase(formData.get('kamar'));
+        const kelasFormatted = toTitleCase(formData.get('kelas'));
+        const ortuFormatted = toTitleCase(formData.get('ortu'));
+        const alamatFormatted = toTitleCase(formData.get('alamat'));
+
+        // Ambil nilai Tahun Ajaran Aktif dari localStorage yang diset oleh index.html
+        // Jika belum ada/kosong, akan default ke format tahun ajaran penuh sistem Anda
+        const tahunAjaranSistem = localStorage.getItem('currentYear') || "1447-1448 H/2026-2027 M";
+
+        // PERBAIKAN PAYLOAD: Menyesuaikan struktur objek data agar terbaca sempurna di tabel admin index.html
+        const payload = {
+            id: Date.now(),
+            nama: namaFormatted,
+            arab: (formData.get('arab') || "").trim(),
+            nisn: (formData.get('nisn') || "").trim(),
+            tgl_masuk: formData.get('tgl_masuk'),
+            tempat_lahir: tempatLahirFormatted, 
+            tgl_lahir: formData.get('tgl_lahir') || "",
+            kamar: kamarFormatted,
+            kelas: kelasFormatted,
+            status: "MUKIM", // SINKRON: Menggunakan 'MUKIM' agar fungsi filter & isSantriWajibBayar berjalan lancar
+            tgl_keluar: "",
+            ortu: ortuFormatted,
+            hp: (formData.get('hp') || "").trim(),
+            alamat: alamatFormatted,
+            thn: tahunAjaranSistem, // SINKRON: Menggunakan rentang tahun dinamis bawaan sistem admin
+            kategori: "santri" 
+        };
+
+        // Menyimpan langsung ke dalam key 'dataSantri' LocalStorage lokal yang dipakai bersama
+        let databaseSantri = JSON.parse(localStorage.getItem('dataSantri')) || [];
+        databaseSantri.push(payload);
+        localStorage.setItem('dataSantri', JSON.stringify(databaseSantri));
+
+        Swal.fire({
+            title: "Pendaftaran Berhasil!",
+            html: `<div style="font-size: 15px; line-height: 1.6; text-align: center; color: #334155;">
+                    Selamat kamu telah memasukkan formulir pendaftaran santri <strong>Al Hidayat Komplek F & G</strong> 
+                    dan sudah resmi terdata di sistem database madrasah.
+                   </div>`,
+            icon: "success",
+            confirmButtonText: "Alhamdulillah",
+            confirmButtonColor: "#10b981",
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.reset();
+                const hariIni = new Date().toISOString().split('T')[0];
+                document.getElementById('tgl_masuk').value = hariIni;
+                syncTglDaftarWali(hariIni);
+            }
+        });
+    }
+</script>
+</body>
+</html>
